@@ -1,9 +1,17 @@
-import express, { Request, Response } from "express";
-// const express = require('express')
+import express from "express"
+import config from "config"
+import {DBConnect} from './utilities'
+import routes from "./routes"
+
+const port = config.get<number>("PORT")
 const app = express()
 
-app.get('/', function (req, res) {
-  res.send('Fly with me')
-})
+app.use(express.json())
 
-app.listen(1550)
+app.listen(port, async () => {
+  console.log(`Started running Application: => http://localhost:${port}`)
+
+  await DBConnect()
+
+  routes(app)
+});
